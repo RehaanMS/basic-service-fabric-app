@@ -21,6 +21,35 @@ namespace ProductCatalog
             : base(context)
         { }
 
+        public async Task<Product> GetFromQueue()
+        {
+            var stateManager = this.StateManager;
+
+            var productQueue = await stateManager.GetOrAddAsync<IReliableQueue<Product>>("productQueue");
+
+            using (var tx = stateManager.CreateTransaction())
+            {
+                var product = await productQueue.TryDequeueAsync(tx);
+
+                await tx.CommitAsync();
+
+                return product.Value;
+            }
+
+            throw new ArgumentException();
+        }
+
+        public async Task AddToQueue(Product product)
+        {
+            var stateManager = this.StateManager;
+            var productQueue = await stateManager.GetOrAddAsync<IReliableQueue<Product>>("productQueue");
+            using (var tx = stateManager.CreateTransaction())
+            {
+                await productQueue.EnqueueAsync(tx, product);
+                await tx.CommitAsync();
+            }
+        }
+
         public async Task<Product> GetProductById(int id)
         {
             var stateManager = this.StateManager;

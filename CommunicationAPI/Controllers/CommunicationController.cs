@@ -64,5 +64,32 @@ namespace CommunicationAPI.Controllers
             
             return product;
         }
+
+        [HttpPost()]
+        [Route("addtoqueue")]
+        public async Task AddToQueue(
+            [FromQuery] int partitionId,
+            [FromBody] Product product)
+        {
+            var statefulProxy = ServiceProxy.Create<IStatefulInterface>(
+                new Uri($"fabric:/Jumpstore/ProductCatalog"),
+                new ServicePartitionKey(partitionId));
+
+            await statefulProxy.AddToQueue(product);
+        }
+
+        [HttpGet()]
+        [Route("getfromqueue")]
+        public async Task<Product> GetFromQueue(
+            [FromQuery] int partitionId)
+        {
+            var statefulProxy = ServiceProxy.Create<IStatefulInterface>(
+                new Uri($"fabric:/Jumpstore/ProductCatalog"),
+                new ServicePartitionKey(partitionId));
+
+            var product = await statefulProxy.GetFromQueue();
+
+            return product;
+        }
     }
 }
