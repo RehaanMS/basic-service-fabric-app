@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StartupServices xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="CommunicationAPI_InstanceCount" Value="1" />
+    <Parameter Name="CustomerAnalytics_InstanceCount" Value="1" />
+    <Parameter Name="ProductCatalog_PartitionCount" Value="3" />
+    <Parameter Name="ProductCatalog_MinReplicaSetSize" Value="3" />
+    <Parameter Name="ProductCatalog_TargetReplicaSetSize" Value="3" />
+    <Parameter Name="ProductCatalog_PartitionLowKey" Value="0" />
+    <Parameter Name="ProductCatalog_PartitionHighKey" Value="2" />
+  </Parameters>
+</StartupServices>
